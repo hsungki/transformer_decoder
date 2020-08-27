@@ -2,7 +2,7 @@
 
 > ji
 
-```javascript
+```python
 // code away!
 
 let generateProject = project => {
