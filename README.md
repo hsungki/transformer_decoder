@@ -33,6 +33,7 @@ One interesting sample from the model is
 ```I went out to the kitchen.```
 Our model training is based on Ernest Hemingway's The Old Man and the Sea, The Sun Also Rises, and A Farewell to Arms, and it sounds like something that Ernest would write. 
 
+The following is the corresponding heatmap:
 ![alt text](https://github.com/hsungki/transformer_decoder/blob/master/figures/attention.png)
 
 
