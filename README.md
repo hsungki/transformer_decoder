@@ -18,6 +18,8 @@ The Decoder layer can be stacked on top of each other. The implementation curren
 The following figure shows training and validation losses and accuracies of the model:
 ![alt text](https://github.com/hsungki/transformer_decoder/blob/master/figures/td_loss_accuracy_tv.png)
 
+As seen above, accuracies of the model in predicting a next word are reasonable, but we can make several changes to improve its performance in the future. Since there are both high bias and high variance, we 1) add more Decoder layers and 2) increase the data size for training. 
+
 ## Attention
 
 ```python
