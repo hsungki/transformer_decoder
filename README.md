@@ -1,1 +1,14 @@
-# transformer_decoder
+# Transformer Decoder for Text Generation
+
+> ji
+
+```javascript
+// code away!
+
+let generateProject = project => {
+  let code = [];
+  for (let js = 0; js < project.length; js++) {
+    code.push(js);
+  }
+};
+```
