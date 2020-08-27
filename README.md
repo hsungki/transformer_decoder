@@ -10,12 +10,6 @@
 > ji
 
 ```python
-// code away!
-
-let generateProject = project => {
-  let code = [];
-  for (let js = 0; js < project.length; js++) {
-    code.push(js);
-  }
-};
+# Generate a text from the model
+print(text_generator(transformer_decoder, 'I ', 0.9, True))
 ```
