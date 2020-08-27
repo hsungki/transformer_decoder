@@ -1,9 +1,9 @@
-# Transformer Decoder for Text Generation
+# Transformer-Decoder for Text Generation
 
 This repository implements a Transformer-Decoder model for text generation. The code is adapted from [Transformer model for language understanding](
 https://www.tensorflow.org/tutorials/text/transformer). 
 
-## Structure of a Transformer Decoder 
+## Structure of a Transformer-Decoder 
 
 The original Transformer model for Machine Translation contains both Encoder and Decoder components. The Encoder processes to-be-translated sentences and the Decoder processes translation results. However, we only need the latter for the purpose of text generation. The overall structure of a Transformer-Decoder is nicely illustrated by the following figure:
 
