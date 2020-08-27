@@ -11,6 +11,8 @@ The original Transformer model for Machine Translation contains both Encoder and
 
 ![alt text](https://github.com/hsungki/transformer_decoder/blob/master/figures/transformer-decoder-intro.png)
 
+The Decoder layer can be stacked on top of each other. The implementation currently uses 2 layers of them. 
+
 ## Training 
 
 ![alt text](https://github.com/hsungki/transformer_decoder/blob/master/figures/td_loss_accuracy.png)
