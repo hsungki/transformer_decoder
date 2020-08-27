@@ -1,5 +1,12 @@
 # Transformer Decoder for Text Generation
 
+## Structure of Transformer Decoder 
+
+## Training 
+
+## Attention
+![alt text](https://github.com/hsungki/transformer_decoder/blob/master/figures/attention.png)
+
 > ji
 
 ```python
