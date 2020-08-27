@@ -20,7 +20,7 @@ for f in file_paths:
     text += open('text/'+f, 'r', encoding='utf-8-sig').read().strip()
 
 text = re.sub(r'[_*]', '', text)
-text = re.sub(r'\s+', ' ', text)  # " " can also be used to indicate spaces.
+text = re.sub(r'\s+', ' ', text) 
 print('The set of characters: ', sorted(set(text)))
 
 
@@ -366,8 +366,6 @@ checkpoint_manager = tf.train.CheckpointManager(checkpoint,
                                                 checkpoint_name='ckpoint')
 if checkpoint_manager.latest_checkpoint:
     checkpoint.restore(checkpoint_manager.latest_checkpoint)
-    # checkpoint_manager.latest_checkpoint is equivalent to
-    # tf.train.latest_checkpoint(directory)
     print('Latest checkpoint files are successfully restored.')
 
 
@@ -453,41 +451,6 @@ axs[1].set_xlabel('Epoch', size=15)
 axs[1].set_ylabel('Accuracy', size=15)
 plt.tight_layout()
 plt.savefig('td_loss_accuracy.pdf')
-
-
-"""
-with open("train_accuracy_history.txt", "w") as f:
-    for s in train_accuracy_history:
-        f.write(str(s) +"\n")
-
-with open("train_loss_history.txt", "w") as f:
-    for s in train_loss_history:
-        f.write(str(s) +"\n")
-
-with open("valid_accuracy_history.txt", "w") as f:
-    for s in valid_accuracy_history:
-        f.write(str(s) + "\n")
-
-with open("valid_loss_history.txt", "w") as f:
-    for s in valid_loss_history:
-        f.write(str(s) + "\n")
-
-with open("train_accuracy_history.txt", "r") as f:
-    for s in f:
-        train_accuracy_history.append(float(s.strip()))
-
-with open("train_loss_history.txt", "r") as f:
-    for s in f:
-        train_loss_history.append(float(s.strip()))
-
-with open("valid_accuracy_history.txt", "r") as f:
-    for s in f:
-        valid_accuracy_history.append(float(s.strip()))
-
-with open("valid_loss_history.txt", "r") as f:
-    for s in f:
-        valid_loss_history.append(float(s.strip()))
-"""
 
 
 # Text generation and attention plot
