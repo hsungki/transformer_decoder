@@ -20,12 +20,18 @@ The following figure shows training and validation losses and accuracies of the 
 
 As seen above, accuracies of the model in predicting a next word are reasonable, but we can make several changes to improve its performance in the future. Since there are both high bias and high variance, we 1) add more Decoder layers and 2) increase the data size for training. 
 
-## Attention
+## Text Generation
 
+We can sample a sentence from the model as the following:
 ```python
 # Generate a text from the model
 print(text_generator(transformer_decoder, 'I ', 0.9, True))
 ```
+We specify that the generated text will begin with ```'I '```. ```0.9``` refers to the randomnness (or temperature) when selecting a next word during the text generation. The lower the number indicates more randomness. The last input parameter ```True``` indicates whether to generate a heatmap for the last Decoder layer.  
+
+One interesting sample from the model is
+```I went out to the kitchen.```
+Our model training is based on Ernest Hemingway's The Old Man and the Sea, The Sun Also Rises, and A Farewell to Arms, and it sounds like something that Ernest would write. 
 
 ![alt text](https://github.com/hsungki/transformer_decoder/blob/master/figures/attention.png)
 
