@@ -450,7 +450,7 @@ axs[1].plot(x_epoch, valid_accuracy_history, '--', linewidth=2, label='Validatio
 axs[1].set_xlabel('Epoch', size=15)
 axs[1].set_ylabel('Accuracy', size=15)
 plt.tight_layout()
-plt.savefig('td_loss_accuracy.pdf')
+plt.savefig('td_loss_accuracy.png')
 
 
 # Text generation and attention plot
@@ -509,7 +509,7 @@ def plot_attention_weights(attention, _encoded_text, layer):
 
     plt.tight_layout()
     plt.show()
-    plt.savefig('attention.pdf')
+    plt.savefig('attention.png')
 
 
 # Generate a text from the model
