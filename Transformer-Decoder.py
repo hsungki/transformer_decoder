@@ -5,12 +5,13 @@ https://www.tensorflow.org/tutorials/text/transformer
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
-import nltk  # nltk.download('punkt') may be needed for a first time import
+import nltk
 import matplotlib.pyplot as plt
 import numpy as np
 import time
 import re
 import random
+nltk.download('punkt')
 
 
 # Load text data
@@ -20,7 +21,7 @@ for f in file_paths:
     text += open('text/'+f, 'r', encoding='utf-8-sig').read().strip()
 
 text = re.sub(r'[_*]', '', text)
-text = re.sub(r'\s+', ' ', text) 
+text = re.sub(r'\s+', ' ', text)  
 print('The set of characters: ', sorted(set(text)))
 
 
@@ -67,7 +68,7 @@ valid_output = [data_output[i] for i in train_indices[train_size:]]
 # Convert to TensorFlow dataset
 batch_size = 64
 buffer_size = train_size
-num_epochs = 50
+num_epochs = 100
 
 train_input = tf.keras.preprocessing.sequence.pad_sequences(train_input, padding='post')
 train_output = tf.keras.preprocessing.sequence.pad_sequences(train_output, padding='post')
@@ -153,8 +154,6 @@ def scaled_dot_product_attention(q, k, v, mask):
     if mask is not None:
         scaled_attention_logits += (mask * -1e9)
 
-    # softmax is normalized on the last axis (seq_length_k) so that the scores
-    # add up to 1.
     attention_weights = tf.nn.softmax(scaled_attention_logits, axis=-1)  # (..., seq_length_q, seq_length_k)
 
     output = tf.matmul(attention_weights, v)  # (..., seq_length_q, depth_v)
@@ -330,15 +329,26 @@ def loss_function(real, pred):
     return tf.reduce_mean(loss_)
 
 
+def accuracy(_tar, _predictions_argmax):
+    _value = 0
+    _count = 0
+    for i in range(_tar.shape[0]):
+        current = 0
+        j = 0
+        while current != vocab_size-1:
+            _count += 1
+            current = _tar[i][j]
+            if current == tf.cast(_predictions_argmax[i][j], tf.int32):
+                _value += 1
+            j += 1
+    return _value, _count
+
+
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 train_loss_history = []
-train_accuracy_history = []
 
 valid_loss = tf.keras.metrics.Mean(name='valid_loss')
-valid_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='valid_accuracy')
 valid_loss_history = []
-valid_accuracy_history = []
 
 
 # Create model
@@ -348,7 +358,6 @@ transformer_decoder = TransformerDecoder(num_layers, embedding_size,
 
 
 def create_masks(x):
-    # Used in the 1st attention block in the decoder.
     # It is used to pad and mask future tokens in the input received by
     # the decoder.
     look_ahead_mask = create_look_ahead_mask(tf.shape(x)[1])
@@ -366,6 +375,8 @@ checkpoint_manager = tf.train.CheckpointManager(checkpoint,
                                                 checkpoint_name='ckpoint')
 if checkpoint_manager.latest_checkpoint:
     checkpoint.restore(checkpoint_manager.latest_checkpoint)
+    # checkpoint_manager.latest_checkpoint is equivalent to
+    # tf.train.latest_checkpoint(directory)
     print('Latest checkpoint files are successfully restored.')
 
 
@@ -384,7 +395,6 @@ def train_step(_inp, _tar):
     optimizer.apply_gradients(zip(gradients, transformer_decoder.trainable_variables))
 
     train_loss.update_state(loss)
-    train_accuracy.update_state(_tar, predictions)
 
 
 def valid_step(_inp, _tar):
@@ -395,7 +405,6 @@ def valid_step(_inp, _tar):
     loss = loss_function(_tar, predictions)
 
     valid_loss.update_state(loss)
-    valid_accuracy.update_state(_tar, predictions)
 
 
 # Model training
@@ -404,59 +413,80 @@ for epoch in range(num_epochs):
 
     # Training
     train_loss.reset_states()
-    train_accuracy.reset_states()
 
     for (batch, (inp, tar)) in enumerate(train_dataset):
         train_step(inp, tar)
 
         if batch % 50 == 0:
-            print('Epoch {} Batch {} Training Loss {:.4f} Training Accuracy {:.4f}'.format(
-                   epoch + 1, batch, train_loss.result().numpy(), train_accuracy.result().numpy()))
+            print('Epoch {} Batch {} Training Loss {:.4f}'.format(
+                   epoch + 1, batch, train_loss.result().numpy()))
 
     train_loss_history.append(train_loss.result().numpy())
-    train_accuracy_history.append(train_accuracy.result().numpy())
 
     # Validation
     valid_loss.reset_states()
-    valid_accuracy.reset_states()
 
     for (batch, (inp, tar)) in enumerate(valid_dataset):
         valid_step(inp, tar)
 
     valid_loss_history.append(valid_loss.result().numpy())
-    valid_accuracy_history.append(valid_accuracy.result().numpy())
 
     if (epoch + 1) % 5 == 0:
         checkpoint_save_path = checkpoint_manager.save()
         print('Saving checkpoint for epoch {} at {}'.format(epoch + 1,
                                                             checkpoint_save_path))
 
-    print('Epoch {} Loss {:.4f} Accuracy {:.4f}'.format(epoch + 1,
-                                                        train_loss.result().numpy(),
-                                                        train_accuracy.result().numpy()))
+    print('Epoch {} Loss {:.4f}'.format(epoch + 1,
+                                        train_loss.result().numpy()))
 
     print('Time taken for 1 epoch: {} secs\n'.format(time.time() - start_time))
 
 
-# Plot model loss and accuracy
-fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+# Plot model loss
+fig, axs = plt.subplots(1, 1, figsize=(5, 5))
 x_epoch = np.arange(len(train_loss_history)) + 1
-axs[0].plot(x_epoch, train_loss_history, linewidth=2, label='Training')
-axs[0].plot(x_epoch, valid_loss_history, '--', linewidth=2, label='Validation')
-axs[0].set_xlabel('Epoch', size=15)
-axs[0].set_ylabel('Loss', size=15)
-axs[1].plot(x_epoch, train_accuracy_history, linewidth=2, label='Training')
-axs[1].plot(x_epoch, valid_accuracy_history, '--', linewidth=2, label='Validation')
-axs[1].set_xlabel('Epoch', size=15)
-axs[1].set_ylabel('Accuracy', size=15)
+axs.plot(x_epoch, train_loss_history, linewidth=2, label='Training')
+axs.plot(x_epoch, valid_loss_history, '--', linewidth=2, label='Validation')
+axs.set_xlabel('Epoch', size=15)
+axs.set_ylabel('Loss', size=15)
+axs.legend(fontsize=10)
 plt.tight_layout()
-plt.savefig('td_loss_accuracy.png')
+plt.show()
+plt.savefig('td_loss.png')
+
+
+# Model accuracy
+train_accuracy = {'value': 0, 'count': 0}
+for (batch, (inp, tar)) in enumerate(train_dataset):
+    combined_mask = create_masks(inp)
+    predictions, _ = transformer_decoder(inp,
+                                         False,
+                                         combined_mask)
+    predictions_argmax = tf.math.argmax(predictions, 2)
+    train_value, train_count = accuracy(tar, predictions_argmax)
+    train_accuracy['value'] += train_value
+    train_accuracy['count'] += train_count
+
+print('Training Accuracy {:.4f}'.format(train_accuracy['value']/train_accuracy['count']))
+
+valid_accuracy = {'value': 0, 'count': 0}
+for (batch, (inp, tar)) in enumerate(valid_dataset):
+    combined_mask = create_masks(inp)
+    predictions, _ = transformer_decoder(inp,
+                                         False,
+                                         combined_mask)
+    predictions_argmax = tf.math.argmax(predictions, 2)
+    valid_value, valid_count = accuracy(tar, predictions_argmax)
+    valid_accuracy['value'] += valid_value
+    valid_accuracy['count'] += valid_count
+
+print('Validation Accuracy {:.4f}'.format(valid_accuracy['value']/valid_accuracy['count']))
 
 
 # Text generation and attention plot
 def text_generator(_model, start, temperature=1.0, plot_attention=False):
     encoded_text = [tokenizer.vocab_size] + tokenizer.encode(start)
-    encoded_text = tf.expand_dims(encoded_text, 0)  # Expand by adding batch and time dimensions.
+    encoded_text = tf.expand_dims(encoded_text, 0)  # Expand by adding a batch dimension.
     max_iteration = tokenizer.vocab_size + 2 - len(encoded_text[0])
 
     for i in range(max_iteration):
