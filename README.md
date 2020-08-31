@@ -27,7 +27,7 @@ We can sample a sentence from the model as the following:
 # Generate a text from the model
 print(text_generator(transformer_decoder, 'I ', 0.9, True))
 ```
-We specify that the generated text will begin with ```'I '```. ```0.9``` refers to the randomnness (or temperature) when selecting a next word during the text generation. The lower the number indicates more randomness. The last input parameter ```True``` indicates whether to generate a heatmap for the last Decoder layer.  
+We specify that the generated text will begin with ```'I '```. ```0.9``` refers to the randomnness (or temperature) when selecting a next word during the text generation. The larger the number indicates more randomness. The last input parameter ```True``` indicates whether to generate a heatmap for the last Decoder layer.  
 
 One interesting sample from the model is
 ```I went out to the kitchen.```
