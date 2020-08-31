@@ -20,7 +20,7 @@ The following figure shows training and validation losses of the model:
 
 As seen above, we can make several changes to improve its performance in the future. Since there are both high bias and high variance, we can 1) add more Decoder layers and 2) increase the data size for training. 
 
-Nonetheless, the model produces reasonable prediction accuracies. The training and validation accuracies are  
+Nonetheless, the model produces reasonable prediction accuracies. The training and validation accuracies are 78% and 79%, respectively. 
 
 ## Text Generation
 
