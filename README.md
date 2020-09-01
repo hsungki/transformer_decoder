@@ -16,7 +16,6 @@ The Decoder layer can be stacked on top of each other. The implementation curren
 ## Model Training 
 
 The following figure shows training and validation losses of the model:
-<img src="https://github.com/hsungki/transformer_decoder/blob/master/figures/td_loss.png" width=50%>
 
 As seen above, we can make several changes to improve its performance in the future. Since there are both high bias and high variance, we can 1) add more Decoder layers and 2) increase the data size for training. 
 
