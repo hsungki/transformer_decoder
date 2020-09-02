@@ -19,9 +19,7 @@ The following figure shows training and validation losses of the model:
 
 <img src="https://github.com/hsungki/transformer_decoder/blob/master/figures/td_loss.png" width=50%>
 
-As seen above, we can make several changes to improve its performance in the future. Since there are both high bias and high variance, we can 1) impose more parameter regularization via dropout, 2) add more Decoder layers, and 3) increase the data size for training. 
-
-For now, we early stop the model training at epoch 15. The training and validation accuracies are 40% and 31%, respectively. 
+As seen above, we can make several changes to improve its performance in the future. Since there are both high bias and high variance, we can 1) impose more parameter regularization via dropout, 2) add more Decoder layers, and 3) increase the data size for training. For now, we early stop the model training at epoch 15. 
 
 ## Text Generation
 
